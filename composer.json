@@ -1,0 +1,20 @@
+{
+    "name": "vinyvic/shopee-php",
+    "description": "Shopee Partner API Client for PHP using OpenAPI 2.0",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^7.4",
+        "vlucas/phpdotenv": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shopee\\": "src"
+        }
+    },
+    "license": "MIT License",
+    "authors": [
+        {
+            "name": "Vinicius Victor"
+        }
+    ]
+}
