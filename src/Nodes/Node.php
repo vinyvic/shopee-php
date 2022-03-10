@@ -24,14 +24,30 @@ abstract class Node
      * @param array|RequestParameters $parameters
      * @return ResponseData
      */
-    public function post($uri, $parameters)
+    public function post($uri, $parameters, $contentType = 'json')
     {
         if ($parameters instanceof RequestParametersInterface) {
             $parameters = $parameters->toArray();
         }
 
-        $request = $this->client->newRequest($this->path . $uri, 'POST', [], $parameters);
+        $request = $this->client->newRequest($this->path . $uri, 'POST', [], $parameters, $contentType);
         $response = $this->client->send($request);
+
+        return new ResponseData($response);
+    }
+
+    /**
+     * @param string|UriInterface $uri
+     * @param array|RequestParameters $parameters
+     * @return ResponseData
+     */
+    public function formPost($uri, $parameters)
+    {
+        if ($parameters instanceof RequestParametersInterface) {
+            $parameters = $parameters->toArray();
+        }
+
+        $response = $this->client->formRequest($this->path . $uri, [], $parameters);
 
         return new ResponseData($response);
     }

@@ -82,7 +82,8 @@ class Client
 
         $this->signatureController = new signatureController($this->secret, $this->partnerId);
 
-        $this->nodes['product'] = new Nodes\Product\Product($this);
+        $this->nodes['product']     = new Nodes\Product\Product($this);
+        $this->nodes['mediaSpace']  = new Nodes\MediaSpace\MediaSpace($this);
     }
 
     public function __get(string $name)
@@ -171,7 +172,7 @@ class Client
      * @param array $data
      * @return RequestInterface
      */
-    public function newRequest($path, $method = 'GET', array $headers = [], $data = []): RequestInterface
+    public function newRequest($path, $method = 'GET', array $headers = [], $data = [], $contentType = 'json'): RequestInterface
     {
         $params = $this->getDefaultParameters();
         $sign   = $this->signature($path);
@@ -188,17 +189,30 @@ class Client
         $uri    = Uri::composeComponents($this->baseUrl->getScheme(), $this->baseUrl->getAuthority(), $path, $query, '');
 
         $headers['User-Agent']      = $this->userAgent;
-        $headers['Content-Type']    = 'application/json';
 
         if ($method == 'POST'){
-            $jsonBody = $this->createJsonBody($data);
+            if ($contentType == 'json'){
+                $headers['Content-Type']    = 'application/json';
+                $jsonBody = $this->createJsonBody($data);
 
-            return new Request(
-                $method,
-                $uri,
-                $headers,
-                $jsonBody
-            );
+                return new Request(
+                    $method,
+                    $uri,
+                    $headers,
+                    $jsonBody
+                );
+            }
+            else {
+                // $headers['multipart'] = $data;
+                $body['multipart'] = $data;
+
+                return new Request(
+                    $method,
+                    $uri,
+                    $headers,
+                    $body
+                );
+            }
         }
         else {
             return new Request(
@@ -239,6 +253,26 @@ class Client
         // );
     }
 
+    public function formRequest($path, array $headers = [], $data = []): ResponseInterface
+    {
+        $params = $this->getDefaultParameters();
+        $sign   = $this->signature($path);
+
+        $query  = 'partner_id=' . $params['partner_id'] . "&timestamp=" . time();
+        $query  .= '&access_token=' . $this->accessToken . '&shop_id=' . $this->shopId . '&sign=' . $sign;
+
+        $uri    = Uri::composeComponents($this->baseUrl->getScheme(), $this->baseUrl->getAuthority(), $path, $query, '');
+
+        // $headers['multipart'] = $data;
+        $body['multipart'] = $data;
+        
+        return $this->httpClient->request('POST', $uri, [
+            'multipart' => [
+                $data
+            ]
+        ]);
+    }
+
     public function send(RequestInterface $request): ResponseInterface
     {
         try {
@@ -254,10 +288,11 @@ class Client
                 default:
                     $className = ClientException::class;
             }
-
-            throw Factory::create($className, $exception);
+            $response = $exception->getResponse();
+            // throw Factory::create($className, $exception);
         } catch (GuzzleServerException $exception) {
-            throw Factory::create(ServerException::class, $exception);
+            $response = $exception->getResponse();
+            // throw Factory::create(ServerException::class, $exception);
         }
 
         return $response;
