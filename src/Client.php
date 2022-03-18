@@ -21,12 +21,12 @@ use Shopee\Exception\Api\ServerException;
 
 class Client 
 {
-    public const VERSION = '1.0';
+    const VERSION = '1.0';
 
-    public const DEFAULT_BASE_URL       = 'https://partner.shopeemobile.com';
-    public const TEST_BASE_URL          = 'https://partner.test-stable.shopeemobile.com';
+    const DEFAULT_BASE_URL       = 'https://partner.shopeemobile.com';
+    const TEST_BASE_URL          = 'https://partner.test-stable.shopeemobile.com';
 
-    public const DEFAULT_USER_AGENT     = 'shopee-php/' . self::VERSION;
+    const DEFAULT_USER_AGENT     = 'shopee-php/' . self::VERSION;
 
     /** @var ClientInterface */
     protected $httpClient;
@@ -80,7 +80,7 @@ class Client
 
         $this->setBaseUrl($config['baseUrl']);
 
-        $this->signatureController = new signatureController($this->secret, $this->partnerId);
+        $this->signatureController = new SignatureController($this->secret, $this->partnerId);
 
         $this->nodes['product']     = new Nodes\Product\Product($this);
         $this->nodes['mediaSpace']  = new Nodes\MediaSpace\MediaSpace($this);
@@ -336,4 +336,31 @@ class Client
 
         return $res->getBody();
     }
+
+    public function refreshAccessToken($refreshToken){
+        $params = $this->getDefaultParameters();
+
+        $path   = '/api/v2/auth/access_token/get';
+        $sign   = $this->signature($path);
+
+        $query  = 'partner_id=' . $params['partner_id'] . "&timestamp=" . time() . '&sign=' . $sign;
+        $uri    = Uri::composeComponents($this->baseUrl->getScheme(), $this->baseUrl->getAuthority(), $path, $query, '');
+
+        $headers['User-Agent']      = $this->userAgent;
+        $headers['Content-Type']    = 'application/json';
+
+        $params['refresh_token'] = $refreshToken;
+
+        $jsonBody = $this->createJsonBody($params);
+        $headers['body'] = $jsonBody;
+        try {
+            $response = $this->httpClient->request('POST', $uri, $headers);
+        }
+        catch (GuzzleClientException $exception){
+            $response = $exception->getResponse();
+        }
+        
+        return $response->getBody();
+    }
 }
+

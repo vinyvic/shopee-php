@@ -2,8 +2,6 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Shopee\Client;
-
-$client = new Client();
-$url = $client->getAuthorizationURL('http://localhost/shopee-php/retrieveAccessToken.php');
+$client = new Shopee\Client();
+$url = $client->getAuthorizationURL('http://localhost/shopee-php/access-token.php');
 header('Location: ' . $url);

@@ -35,10 +35,3 @@ try {
 } catch (Exception $th) {
     redirAuth();
 }
-
-// if ($response->error){
-//     echo json_encode($response);
-// }
-// else {
-//     header('Location: http://localhost/shopee?access_token=' . $response->access_token . '&refresh_token=' . $response->refresh_token);
-// }
