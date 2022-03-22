@@ -4,23 +4,23 @@ namespace Shopee\Nodes\Product\Parameters;
 
 use Shopee\RequestParameters;
 
-class AddItem extends RequestParameters
+class UpdateItem extends RequestParameters
 {
     /**
-     * Item price (Required)
+     * Item ID (Required)
      *
-     * @param float $value
+     * @param int $value
      * @return $this
      */
-    public function setOriginalPrice(float $value)
+    public function setItemId(int $value)
     {
-        $this->parameters['original_price'] = $value;
+        $this->parameters['item_id'] = $value;
 
         return $this;
     }
 
     /**
-     * Item description (Required)
+     * Item description
      * if description_type is normal , Description information should be set by this field.
      *
      * @param string $value 

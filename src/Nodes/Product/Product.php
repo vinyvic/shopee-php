@@ -103,4 +103,50 @@ class Product extends Node
     {
         return $this->post('init_tier_variation', $parameters);
     }
+
+    /**
+     * Use this call to search item.
+     * 
+     * @param array|Parameters\GetItemsList $parameters
+     * @return ResponseData
+     */
+    public function searchItem($parameters = []): ResponseData
+    {
+        return $this->get('search_item', $parameters);
+    }
+
+    /**
+     * Update item.
+     * 
+     * @param array|Parameters\GetItemsList $parameters
+     * @return ResponseData
+     */
+    public function updateItem($parameters = []): ResponseData
+    {
+        return $this->post('update_item', $parameters);
+    }
+
+    /**
+     * Update stock.
+
+     * 
+     * @param array|Parameters\GetItemsList $parameters
+     * @return ResponseData
+     */
+    public function updateStock($parameters = []): ResponseData
+    {
+        return $this->post('update_stock', $parameters);
+    }
+
+    /**
+     * Update Price.
+
+     * 
+     * @param array|Parameters\GetItemsList $parameters
+     * @return ResponseData
+     */
+    public function updatePrice($parameters = []): ResponseData
+    {
+        return $this->post('update_price', $parameters);
+    }
 }
