@@ -149,4 +149,16 @@ class Product extends Node
     {
         return $this->post('update_price', $parameters);
     }
+
+    /**
+     * Unlist item.
+
+     * 
+     * @param array|Parameters\GetItemsList $parameters
+     * @return ResponseData
+     */
+    public function unlistItem($parameters = []): ResponseData
+    {
+        return $this->post('unlist_item', $parameters);
+    }
 }

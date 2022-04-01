@@ -64,11 +64,11 @@ class Client
         $config = array_merge([
             'httpClient'    => null,
             'accessToken'   => null,
+            'shopid'        => null,
             'baseUrl'       => $test ? self::TEST_BASE_URL : self::DEFAULT_BASE_URL,
             'userAgent'     => self::DEFAULT_USER_AGENT,
             'secret'        => $_ENV['SHOPEE_PARTNER_KEY'],
             'partner_id'    => (int)$_ENV['SHOPEE_PARTNER_ID'],
-            'shopid'        => (int)$_ENV['SHOPEE_SHOP_ID'],
         ], $config);
 
         $this->httpClient   = $config['httpClient'] ?: new HttpClient();;
@@ -84,6 +84,7 @@ class Client
 
         $this->nodes['product']     = new Nodes\Product\Product($this);
         $this->nodes['mediaSpace']  = new Nodes\MediaSpace\MediaSpace($this);
+        $this->nodes['order']       = new Nodes\Order\Order($this);
     }
 
     public function __get(string $name)

@@ -55,9 +55,10 @@ class TierVariation extends RequestParameters
      * @param string value
      * @return $this
      */
-    public function SetName(string $value)
+    public function setName(string $value)
     {
         $this->parameters['name'] = $value;
+        return $this;
     }
 
     /**
@@ -66,9 +67,10 @@ class TierVariation extends RequestParameters
      * @param array<OptionList> value
      * @return $this
      */
-    public function SetOptionList(array $value)
+    public function setOptionList(array $value)
     {
         $this->parameters['option_list'] = $value;
+        return $this;
     }
 }
 
@@ -80,9 +82,10 @@ class OptionList extends RequestParameters
      * @param string value
      * @return $this
      */
-    public function SetOption(string $value)
+    public function setOption(string $value)
     {
         $this->parameters['option'] = $value;
+        return $this;
     }
 
     /**
@@ -91,9 +94,10 @@ class OptionList extends RequestParameters
      * @param string value
      * @return $this
      */
-    public function SetImage(string $value)
+    public function setImage(string $value)
     {
         $this->parameters['image']['image_id'] = $value;
+        return $this;
     }
 }
 
